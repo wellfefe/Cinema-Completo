@@ -1,0 +1,58 @@
+{
+  "filmes": [
+    {
+      "id": "f263",
+      "titulo": "O AMOR A PRIMEIRA FISTA",
+      "sinopse": "MOR A PRIMEIURA VISTA",
+      "classificacao": "14",
+      "duracao": 145,
+      "genero": "DRAMA",
+      "dataInicio": "2025-12-10",
+      "dataFim": "2025-12-17"
+    }
+  ],
+  "salas": [
+    {
+      "id": "50c7",
+      "numero": 10,
+      "capacidadeMaxima": 50
+    }
+  ],
+  "sessoes": [
+    {
+      "id": "e06e",
+      "filmeId": "f263",
+      "salaId": "50c7",
+      "dataHora": "2025-12-10T14:22"
+    }
+  ],
+  "ingressos": [
+    {
+      "id": "c686",
+      "sessaoId": "e06e",
+      "tipo": "INTEIRA",
+      "valor": 50
+    },
+    {
+      "id": "dee2",
+      "sessaoId": "e06e",
+      "tipo": "MEIA",
+      "valor": 25
+    },
+    {
+      "id": "8888",
+      "sessaoId": "e06e",
+      "tipo": "INTEIRA",
+      "valor": 150
+    }
+  ],
+  "lanches": [
+    {
+      "id": "fa6a",
+      "nome": "Pipoca com sal e manteiga",
+      "descricao": "pIPOQUINHA COM SAL E MANTEIGA",
+      "valorUnitario": 50,
+      "qtdInicial": 5
+    }
+  ]
+}
