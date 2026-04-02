@@ -152,7 +152,21 @@ Para visualizar o banco, pode ser usado o pgAdmin 4.
 - mensagens visuais com toast
 - navegação com hover e link ativo destacado
 - estrutura organizada por páginas, modelos, componentes e serviços
-  
+
+## Imagens do sistema
+
+### Home
+![Home](./assets/home.png)
+
+### Tela de Filmes
+![Tela de Filmes](./assets/filmes.png)
+
+### Swagger
+![Swagger](./assets/swagger.png)
+
+### Tela de Pedidos
+![Pedidos](./assets/pedidos.png)
+
 # Autor
 👤 GitHub - @wellfefe   
 Frontend Mentor - @wellfefe
