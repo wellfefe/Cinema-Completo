@@ -1,6 +1,8 @@
-git init
-git add .
-git commit -m "feat: projeto completo cinema com backend e frontend"
-git branch -M main
-git remote add origin https://github.com/wellfefe/Cinema-Completo.git
-git push -u origin main
+node_modules/
+dist/
+.env
+backend/node_modules/
+backend/dist/
+backend/.env
+frontend/node_modules/
+frontend/dist/
