@@ -1,5 +1,6 @@
 import { api } from './client';
 import { LoginResponse, RegisterInput, User } from '../types/auth';
+import { createDemoUser } from '../services/userIdentityService';
 
 const demoUser: User = {
   id: 'demo-user',
@@ -17,7 +18,7 @@ export async function loginApi(email: string, password: string): Promise<LoginRe
       return {
         accessToken: `demo-jwt-${Date.now()}`,
         refreshToken: `demo-refresh-${Date.now()}`,
-        user: { ...demoUser, email },
+        user: createDemoUser(email),
       };
     }
 
