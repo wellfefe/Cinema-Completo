@@ -1,98 +1,134 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Backend - API Cinema
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API REST em NestJS para o sistema de cinema.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Principais recursos
 
-## Description
+- CRUD de cinema, sala, filme, sessao, ingresso, lanche combo e pedido.
+- Autenticacao JWT.
+- Cadastro e login de usuarios.
+- Recuperacao e redefinicao de senha.
+- Envio real de e-mail com Nodemailer.
+- Swagger com autorizacao Bearer JWT.
+- Prisma ORM com PostgreSQL.
+- Seed para dados iniciais de apresentacao.
+- Campo `posterUrl` em filme para exibir imagem no frontend e no mobile.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Rodar localmente
 
-## Project setup
-
-```bash
-$ npm install
+```powershell
+cd C:\Users\Cient\Desktop\Projetos\CINEMA-PROJETO\backend
+npm install
+npm run start:dev
 ```
 
-## Compile and run the project
+API:
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```txt
+http://localhost:3000
 ```
 
-## Run tests
+Swagger:
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```txt
+http://localhost:3000/api
 ```
 
-## Deployment
+## Banco de dados
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+O projeto usa PostgreSQL.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Configure `backend/.env`:
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+```env
+DATABASE_URL="postgresql://usuario:senha@localhost:5432/crud_cinema"
+JWT_SECRET="troque-este-segredo"
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Aplicar migrations:
 
-## Resources
+```powershell
+npx prisma migrate dev
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+Gerar Prisma Client:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```powershell
+npx prisma generate
+```
 
-## Support
+Rodar seed:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```powershell
+npm run seed
+```
 
-## Stay in touch
+Abrir Prisma Studio:
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```powershell
+npx prisma studio
+```
 
-## License
+## Configurar envio de e-mail
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Para recuperacao de senha real, configure SMTP no `.env`:
+
+```env
+SMTP_HOST="smtp.gmail.com"
+SMTP_PORT="587"
+SMTP_SECURE="false"
+SMTP_USER="seu-email@gmail.com"
+SMTP_PASS="sua-senha-de-app"
+SMTP_FROM="Cinema <seu-email@gmail.com>"
+```
+
+Para Gmail, use senha de app, nao a senha normal da conta.
+
+## Endpoints de autenticacao
+
+- `POST /auth/register`
+- `POST /auth/login`
+- `POST /auth/forgot-password`
+- `POST /auth/reset-password`
+- `GET /auth/me`
+- `GET /auth/users`
+- `POST /auth/refresh`
+
+## Usar JWT no Swagger
+
+1. Abra `http://localhost:3000/api`.
+2. Execute `POST /auth/login`.
+3. Copie o `accessToken`.
+4. Clique em `Authorize`.
+5. Cole o token no campo `JWT-auth`.
+6. Execute uma rota protegida.
+
+## Filmes com imagem
+
+O filme aceita `posterUrl`:
+
+```json
+{
+  "titulo": "Interestelar",
+  "sinopse": "Uma equipe viaja por um buraco de minhoca.",
+  "classificacao": "10 anos",
+  "duracao": 169,
+  "elenco": "Matthew McConaughey, Anne Hathaway",
+  "genero": "FICCAO",
+  "posterUrl": "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+  "dataInicioExibicao": "2026-06-01T00:00:00.000Z",
+  "dataFinalExibicao": "2026-06-30T23:59:59.000Z",
+  "cinemaId": 1
+}
+```
+
+Esse campo e salvo no banco e consumido pelo frontend web e pelo app mobile.
+
+## Scripts
+
+```powershell
+npm run start:dev
+npm run build
+npm run seed
+npm run test
+```

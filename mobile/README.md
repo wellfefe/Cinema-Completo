@@ -1,86 +1,131 @@
 # Cinema Mobile
 
-Aplicativo mobile Expo para compra de ingressos de cinema.
+Aplicativo mobile Expo para clientes comprarem ingressos de cinema.
 
 ## Fluxos implementados
 
 - Login, cadastro, recuperacao de senha e logout.
-- Persistencia de sessao com `expo-secure-store`.
-- Listagem de filmes com fallback local caso a API nao responda.
+- JWT salvo com `expo-secure-store` no app nativo.
+- Fallback em `localStorage` quando roda no navegador.
+- Listagem de filmes vinda do backend.
+- Imagem do filme carregada por `posterUrl` salvo no banco.
+- Fallback local de filmes caso a API esteja fora do ar.
 - Listagem de sessoes por filme.
 - Escolha visual de assentos livres, ocupados e selecionados.
 - Selecao de combos de lanches.
 - Pagamento simulado.
 - Emissao de comprovante com QR Code.
 - Tela "Meus ingressos" com leitura offline.
-- SQLite local com status de sincronizacao.
+- SQLite local para ingressos comprados.
+- Status de sincronizacao: `pending_sync` e `synced`.
 - Sync automatico quando a internet volta.
 
 ## Rodar o app
 
-```bash
-cd mobile
+```powershell
+cd C:\Users\Cient\Desktop\Projetos\CINEMA-PROJETO\mobile
 npm install
 npm start
 ```
 
-Se estiver testando no celular fisico, configure a API:
+## Rodar no celular fisico
 
-```bash
-$env:EXPO_PUBLIC_API_URL="http://SEU_IP_LOCAL:3000"
-npm start
+O celular nao acessa `localhost` do computador. Use o IP local da maquina.
+
+Exemplo:
+
+```powershell
+$env:EXPO_PUBLIC_API_URL="http://192.168.1.181:3000"
+npm start -- --clear
 ```
 
-No Windows PowerShell, descubra seu IP com:
+Depois escaneie o QR Code no Expo Go.
 
-```bash
+Para descobrir o IP no Windows:
+
+```powershell
 ipconfig
 ```
 
-## Rodar testes
+Procure o `IPv4` da rede Wi-Fi.
 
-```bash
-cd mobile
-npm test
-npm run typecheck
+## Rodar no navegador
+
+```powershell
+npm start
 ```
+
+Depois pressione `w` no terminal do Expo.
+
+Web:
+
+```txt
+http://localhost:8081
+```
+
+## Backend necessario
+
+```txt
+http://localhost:3000
+```
+
+No celular fisico, substitua `localhost` pelo IP do computador.
 
 ## Login de apresentacao
 
-O app aceita o login abaixo mesmo se o backend ainda nao tiver JWT:
+Usuario inicial:
 
 ```txt
 E-mail: aluno@cinema.com
 Senha: 123456
 ```
 
-Isso permite apresentar o fluxo completo enquanto o backend evolui para autenticacao real.
+Tambem e possivel cadastrar novos usuarios pelo app.
 
-## Integracao com backend existente
+## Recuperacao de senha
 
-O mobile tenta consumir os endpoints atuais:
+O fluxo usa:
 
+- `POST /auth/forgot-password`
+- `POST /auth/reset-password`
+
+Depois de enviar o e-mail, o app mostra a area para informar codigo, nova senha e confirmacao.
+
+Regras:
+
+- Codigo incorreto mostra mensagem de erro.
+- Botao "Nao recebi o codigo" libera reenvio apos 45 segundos.
+- Nova senha igual a anterior mostra mensagem especifica.
+
+## Integracao com backend
+
+Endpoints consumidos:
+
+- `POST /auth/register`
+- `POST /auth/login`
+- `POST /auth/forgot-password`
+- `POST /auth/reset-password`
+- `GET /auth/me`
 - `GET /filme`
 - `GET /sessao`
 - `GET /lanche-combo`
 - `POST /pedido`
 
-Para uma versao 100% producao, os proximos endpoints recomendados sao:
+## Rodar verificacoes
 
-- `POST /auth/register`
-- `POST /auth/login`
-- `POST /auth/forgot-password`
-- `GET /auth/me`
-- `POST /auth/refresh`
-- `GET /filme/:id/sessoes`
-- `GET /sessao/:id/assentos`
-- `POST /pedido` com assentos, localId, formaPagamento e dados de sync
+```powershell
+cd mobile
+npm run typecheck
+npm test
+```
 
 ## Pontos para apresentar ao professor
 
-- Arquitetura separada por responsabilidades: API, contexts, database, hooks, screens, services, store e types.
-- JWT preparado com Secure Store.
+- Arquitetura separada por responsabilidades: API, contexts, database, hooks, navigation, screens, services, store e types.
+- JWT persistido com Secure Store.
+- Filme cadastrado no frontend aparece no mobile porque ambos consomem o mesmo backend.
+- Poster do filme vem do banco pelo campo `posterUrl`.
 - Compra salva localmente em SQLite.
 - Offline-first para ingressos ja comprados.
 - Sincronizacao pendente usando `localId` para evitar duplicidade.
-- Regras de negocio testaveis sem depender da interface.
+- Regras de negocio testadas com Vitest.
