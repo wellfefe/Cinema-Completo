@@ -46,6 +46,7 @@ model Filme {
   duracao            Int
   elenco             String
   genero             Genero
+  posterUrl          String?
   dataInicioExibicao DateTime
   dataFinalExibicao  DateTime
 

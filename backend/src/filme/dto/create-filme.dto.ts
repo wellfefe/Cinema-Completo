@@ -3,6 +3,7 @@ import {
   IsEnum,
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsString,
 } from 'class-validator';
 import { Genero } from '@prisma/client';
@@ -30,6 +31,10 @@ export class CreateFilmeDto {
 
   @IsEnum(Genero)
   genero: Genero;
+
+  @IsString()
+  @IsOptional()
+  posterUrl?: string;
 
   @IsDateString()
   dataInicioExibicao: string;

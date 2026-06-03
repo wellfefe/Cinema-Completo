@@ -7,6 +7,7 @@ import { useAuth } from '../hooks/useAuth';
 import { AuthStackParamList } from '../types/navigation';
 import { RegisterInput } from '../types/auth';
 import { validateRegisterForm } from '../services/validationService';
+import { getRegisterErrorMessage } from '../services/registerErrorService';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Register'>;
 
@@ -20,13 +21,16 @@ export function RegisterScreen({ navigation }: Props) {
     phone: '',
   });
   const [errors, setErrors] = useState<Partial<Record<keyof RegisterInput, string>>>({});
+  const [registerError, setRegisterError] = useState('');
   const [loading, setLoading] = useState(false);
 
   function updateField(field: keyof RegisterInput, value: string) {
+    setRegisterError('');
     setForm(current => ({ ...current, [field]: value }));
   }
 
   async function handleRegister() {
+    setRegisterError('');
     const validation = validateRegisterForm(form);
 
     if (!validation.success) {
@@ -37,8 +41,10 @@ export function RegisterScreen({ navigation }: Props) {
     try {
       setLoading(true);
       await signUp(form);
-    } catch {
-      Alert.alert('Cadastro', 'Nao foi possivel criar sua conta.');
+    } catch (error) {
+      const message = getRegisterErrorMessage(error);
+      setRegisterError(message);
+      Alert.alert('Cadastro', message);
     } finally {
       setLoading(false);
     }
@@ -52,6 +58,11 @@ export function RegisterScreen({ navigation }: Props) {
       <Input label="Telefone" value={form.phone} keyboardType="phone-pad" onChangeText={value => updateField('phone', value)} />
       <Input label="Senha" value={form.password} error={errors.password} secureTextEntry onChangeText={value => updateField('password', value)} />
       <Input label="Confirmar senha" value={form.confirmPassword} error={errors.confirmPassword} secureTextEntry onChangeText={value => updateField('confirmPassword', value)} />
+      {registerError ? (
+        <View style={{ padding: 14, borderRadius: 8, backgroundColor: '#FEE2E2' }}>
+          <Text style={{ color: '#991B1B', fontWeight: '800' }}>{registerError}</Text>
+        </View>
+      ) : null}
       <Button title="Cadastrar" loading={loading} onPress={handleRegister} />
       <View>
         <Button title="Voltar para login" variant="secondary" onPress={() => navigation.goBack()} />

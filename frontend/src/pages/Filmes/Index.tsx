@@ -10,6 +10,7 @@ type FilmeForm = {
   duracao: number;
   elenco: string;
   genero: string;
+  posterUrl: string;
   dataInicioExibicao: string;
   dataFinalExibicao: string;
   cinemaId: number;
@@ -22,6 +23,7 @@ const initialForm: FilmeForm = {
   duracao: 0,
   elenco: '',
   genero: 'ACAO',
+  posterUrl: '',
   dataInicioExibicao: '',
   dataFinalExibicao: '',
   cinemaId: 1,
@@ -93,6 +95,7 @@ export default function FilmesPage() {
       duracao: filme.duracao,
       elenco: filme.elenco,
       genero: filme.genero,
+      posterUrl: filme.posterUrl ?? '',
       dataInicioExibicao: filme.dataInicioExibicao.slice(0, 16),
       dataFinalExibicao: filme.dataFinalExibicao.slice(0, 16),
       cinemaId: filme.cinemaId,
@@ -162,6 +165,21 @@ export default function FilmesPage() {
               onChange={handleChange}
               required
             />
+          </div>
+
+          <div className="col-12">
+            <label className="form-label">URL da imagem / poster</label>
+            <input
+              type="url"
+              name="posterUrl"
+              className="form-control"
+              value={form.posterUrl}
+              onChange={handleChange}
+              placeholder="https://image.tmdb.org/t/p/w500/exemplo.jpg"
+            />
+            <small className="text-muted">
+              Cole uma URL publica da imagem. Ela sera salva no banco e exibida no mobile.
+            </small>
           </div>
 
           <div className="col-md-4">
@@ -270,6 +288,14 @@ export default function FilmesPage() {
           {filmes.map((filme) => (
             <div key={filme.id} className="col-md-6 col-lg-4 mb-3">
               <div className="card h-100 shadow-sm">
+                {filme.posterUrl && (
+                  <img
+                    src={filme.posterUrl}
+                    alt={filme.titulo}
+                    className="card-img-top"
+                    style={{ height: 320, objectFit: 'cover' }}
+                  />
+                )}
                 <div className="card-body">
                   <h5 className="card-title">{filme.titulo}</h5>
                   <p>{filme.sinopse}</p>

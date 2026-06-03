@@ -32,6 +32,10 @@ export class UpdateFilmeDto {
   @IsOptional()
   genero?: Genero;
 
+  @IsString()
+  @IsOptional()
+  posterUrl?: string;
+
   @IsDateString()
   @IsOptional()
   dataInicioExibicao?: string;

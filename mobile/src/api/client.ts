@@ -4,7 +4,7 @@ import { secureStorage } from '../services/secureStorage';
 
 export const API_BASE_URL =
   process.env.EXPO_PUBLIC_API_URL ??
-  (Platform.OS === 'web' ? 'http://localhost:3000' : 'http://192.168.0.10:3000');
+  (Platform.OS === 'web' ? 'http://localhost:3000' : 'http://192.168.1.181:3000');
 
 export const api = axios.create({
   baseURL: API_BASE_URL,

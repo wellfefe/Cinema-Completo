@@ -1,7 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { createHmac } from 'crypto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { MailService } from '../mail/mail.service';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 type DemoUser = {
   id: string;
@@ -13,6 +15,8 @@ type DemoUser = {
 
 @Injectable()
 export class AuthService {
+  constructor(private readonly mailService: MailService) {}
+
   private readonly users = new Map<string, DemoUser>([
     [
       'aluno@cinema.com',
@@ -37,10 +41,16 @@ export class AuthService {
   }
 
   register(input: RegisterDto) {
+    const normalizedEmail = input.email.trim().toLowerCase();
+
+    if (this.users.has(normalizedEmail)) {
+      throw new BadRequestException('Ja existe uma conta vinculada a esse e-mail.');
+    }
+
     const user: DemoUser = {
       id: `user-${Date.now()}`,
       name: input.name,
-      email: input.email,
+      email: normalizedEmail,
       phone: input.phone,
       password: input.password,
     };
@@ -49,9 +59,56 @@ export class AuthService {
     return this.buildAuthResponse(user);
   }
 
-  forgotPassword(email: string) {
+  async forgotPassword(email: string) {
+    const normalizedEmail = email.trim().toLowerCase();
+    const recoveryCode = this.createRecoveryCode(normalizedEmail);
+    const recoveryLink = `cinema://reset-password?email=${encodeURIComponent(
+      normalizedEmail,
+    )}&code=${recoveryCode}`;
+
+    await this.mailService.sendPasswordRecoveryEmail({
+      to: normalizedEmail,
+      recoveryCode,
+      recoveryLink,
+    });
+
     return {
-      message: `Se ${email} estiver cadastrado, enviaremos as instrucoes de recuperacao.`,
+      message: `Enviamos as instrucoes de recuperacao para ${normalizedEmail}. Verifique sua caixa de entrada.`,
+      recoveryCode,
+      recoveryLink,
+    };
+  }
+
+  findAllUsers() {
+    return Array.from(this.users.values()).map(({ password, ...user }) => user);
+  }
+
+  resetPassword(input: ResetPasswordDto) {
+    const normalizedEmail = input.email.trim().toLowerCase();
+    const expectedCode = this.createRecoveryCode(normalizedEmail);
+
+    if (input.code.trim() !== expectedCode) {
+      throw new BadRequestException('Codigo de recuperacao invalido.');
+    }
+
+    const existingUser = this.users.get(normalizedEmail);
+
+    if (existingUser && existingUser.password === input.newPassword) {
+      throw new BadRequestException('A nova senha nao pode ser igual a senha anterior.');
+    }
+
+    const user: DemoUser = existingUser ?? {
+      id: `user-${Date.now()}`,
+      name: normalizedEmail.split('@')[0] || 'Cliente',
+      email: normalizedEmail,
+      password: input.newPassword,
+    };
+
+    user.password = input.newPassword;
+    this.users.set(normalizedEmail, user);
+
+    return {
+      message: 'Senha redefinida com sucesso. Entre usando sua nova senha.',
     };
   }
 
@@ -121,5 +178,13 @@ export class AuthService {
 
   private base64Url(value: string) {
     return Buffer.from(value).toString('base64url');
+  }
+
+  private createRecoveryCode(email: string) {
+    const digest = createHmac('sha256', process.env.JWT_SECRET ?? 'cinema-dev-secret')
+      .update(email)
+      .digest('hex');
+
+    return String(Number.parseInt(digest.slice(0, 8), 16) % 1_000_000).padStart(6, '0');
   }
 }

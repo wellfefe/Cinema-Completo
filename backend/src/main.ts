@@ -15,6 +15,16 @@ async function bootstrap() {
     .setTitle('CRUD Cinema API')
     .setDescription('Documentação da API do sistema de cinema')
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
+        in: 'header',
+      },
+      'JWT-auth',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

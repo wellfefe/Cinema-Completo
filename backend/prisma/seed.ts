@@ -12,11 +12,35 @@ const prisma = new PrismaClient({
   adapter: new PrismaPg({ connectionString: databaseUrl }),
 });
 
+const seedPosters = {
+  interestelar: 'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg',
+  divertidaMente2: 'https://image.tmdb.org/t/p/w500/xGvz7nlGQeePcVOpAzOcHsC7kRt.jpg',
+  dunaParteDois: 'https://image.tmdb.org/t/p/w500/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg',
+};
+
+async function updateSeedPosters() {
+  await Promise.all([
+    prisma.filme.updateMany({
+      where: { titulo: 'Interestelar' },
+      data: { posterUrl: seedPosters.interestelar },
+    }),
+    prisma.filme.updateMany({
+      where: { titulo: 'Divertida Mente 2' },
+      data: { posterUrl: seedPosters.divertidaMente2 },
+    }),
+    prisma.filme.updateMany({
+      where: { titulo: 'Duna: Parte Dois' },
+      data: { posterUrl: seedPosters.dunaParteDois },
+    }),
+  ]);
+}
+
 async function main() {
   const filmesCount = await prisma.filme.count();
 
   if (filmesCount > 0) {
-    console.log('Seed ignorado: o banco ja possui filmes cadastrados.');
+    await updateSeedPosters();
+    console.log('Seed atualizado: posters dos filmes existentes conferidos.');
     return;
   }
 
@@ -61,6 +85,7 @@ async function main() {
         duracao: 169,
         elenco: 'Matthew McConaughey, Anne Hathaway, Jessica Chastain',
         genero: Genero.FICCAO,
+        posterUrl: seedPosters.interestelar,
         dataInicioExibicao: new Date('2026-06-01T00:00:00.000Z'),
         dataFinalExibicao: new Date('2026-06-30T23:59:59.000Z'),
         cinemaId: cinema.id,
@@ -75,6 +100,7 @@ async function main() {
         duracao: 96,
         elenco: 'Amy Poehler, Maya Hawke',
         genero: Genero.ANIMACAO,
+        posterUrl: seedPosters.divertidaMente2,
         dataInicioExibicao: new Date('2026-06-01T00:00:00.000Z'),
         dataFinalExibicao: new Date('2026-06-30T23:59:59.000Z'),
         cinemaId: cinema.id,
@@ -89,6 +115,7 @@ async function main() {
         duracao: 166,
         elenco: 'Timothee Chalamet, Zendaya, Rebecca Ferguson',
         genero: Genero.FICCAO,
+        posterUrl: seedPosters.dunaParteDois,
         dataInicioExibicao: new Date('2026-06-01T00:00:00.000Z'),
         dataFinalExibicao: new Date('2026-06-30T23:59:59.000Z'),
         cinemaId: cinema.id,

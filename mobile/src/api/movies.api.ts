@@ -11,13 +11,14 @@ type BackendMovie = {
   duracao: number;
   elenco?: string;
   genero: string;
+  posterUrl?: string;
 };
 
 function normalizeMovie(movie: BackendMovie): Movie {
   return {
     id: String(movie.id),
     title: movie.titulo,
-    posterUrl: getMoviePosterUrl(movie.titulo),
+    posterUrl: movie.posterUrl || getMoviePosterUrl(movie.titulo),
     shortSynopsis: movie.sinopse.slice(0, 110),
     synopsis: movie.sinopse,
     genre: movie.genero,

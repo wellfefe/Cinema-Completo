@@ -6,6 +6,7 @@ export interface Filme {
   duracao: number;
   elenco: string;
   genero: string;
+  posterUrl?: string;
   dataInicioExibicao: string;
   dataFinalExibicao: string;
   cinemaId: number;
